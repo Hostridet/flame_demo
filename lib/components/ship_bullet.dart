@@ -1,10 +1,11 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
+import 'package:flutter_flame/components/bullet_wall.dart';
 import 'package:flutter_flame/components/cosmic_game.dart';
 
 /// Снаряд корабля
-class ShipBullet extends SpriteAnimationComponent with HasGameReference<CosmicGame> {
+class ShipBullet extends SpriteAnimationComponent with HasGameReference<CosmicGame>, CollisionCallbacks {
   /// Направление снаряда
   final Vector2 velocity;
 
@@ -43,5 +44,13 @@ class ShipBullet extends SpriteAnimationComponent with HasGameReference<CosmicGa
   Future<void> _loadAnimations() async {
     final spriteSheet = SpriteSheet.fromColumnsAndRows(image: await game.images.load('beams.png'), columns: 18, rows: 21);
     _bulletAnimation = spriteSheet.createAnimation(row: 1, stepTime: _animationSpeed, from: 0, to: 1);
+  }
+
+  @override
+  void onCollisionStart(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollisionStart(intersectionPoints, other);
+    if (other is BulletWall) {
+      removeFromParent();
+    }
   }
 }
