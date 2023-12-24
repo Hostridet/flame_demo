@@ -3,6 +3,7 @@ import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter_flame/components/bullet_wall.dart';
 import 'package:flutter_flame/components/cosmic_game.dart';
+import 'package:flutter_flame/components/enemy_ship.dart';
 
 /// Снаряд корабля
 class ShipBullet extends SpriteAnimationComponent with HasGameReference<CosmicGame>, CollisionCallbacks {
@@ -49,7 +50,7 @@ class ShipBullet extends SpriteAnimationComponent with HasGameReference<CosmicGa
   @override
   void onCollisionStart(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollisionStart(intersectionPoints, other);
-    if (other is BulletWall) {
+    if (other is BulletWall || other is EnemyShip) {
       removeFromParent();
     }
   }

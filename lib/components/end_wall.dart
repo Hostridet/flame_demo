@@ -2,6 +2,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter_flame/components/cosmic_game.dart';
 import 'package:flutter_flame/components/enemy_ship.dart';
+import 'package:flutter_flame/utils/play_state.dart';
 
 /// Стена окончания игры
 class EndWall extends RectangleComponent with HasGameReference<CosmicGame>, CollisionCallbacks {
@@ -23,7 +24,7 @@ class EndWall extends RectangleComponent with HasGameReference<CosmicGame>, Coll
   void onCollisionStart(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollisionStart(intersectionPoints, other);
     if (other is EnemyShip) {
-      game.pauseEngine();
+      game.playState = PlayState.end;
     }
   }
 }
