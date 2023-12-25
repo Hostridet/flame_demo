@@ -1,6 +1,29 @@
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_flame/screens/game_app.dart';
+import 'package:flutter_flame/components/cosmic_game.dart';
+import 'widgets/navigation_keys.dart';
 
 void main() {
-  runApp(const GameApp());
+  final game = CosmicGame();
+  runApp(
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: Stack(
+          children: [
+            GameWidget(
+              game: game,
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: NavigationKeys(
+                onDirectionChanged: game.onArrowKeyChanged,
+                onFireTap: game.onFireTap,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }

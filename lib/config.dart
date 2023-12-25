@@ -1,8 +1,13 @@
-/// Конфигурация для игры
 abstract class Config {
-  /// Ширина окна игры
-  static const gameWith = 600;
+  /// Высота окна игрового поля 670 400
+  static double areaHeight = 670;
 
-  /// Высота окна игры
-  static const gameHeight = 600;
+  /// Ширина окна игрового поля
+  static double areaWidth = 400;
+
+  /// Высота корабля
+  static double shipHeight = 70;
+
+  /// Ширина корабля
+  static double shipWidth = 70;
 }
