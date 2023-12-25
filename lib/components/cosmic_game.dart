@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter_flame/components/cosmic_ship.dart';
+import 'package:flutter_flame/components/end_wall.dart';
 import 'package:flutter_flame/components/enemy_ship.dart';
 import 'package:flutter_flame/components/play_area.dart';
 import 'package:flutter_flame/components/ship_bullet.dart';
@@ -15,6 +16,10 @@ class CosmicGame extends FlameGame with KeyboardEvents, HasCollisionDetection {
       Config.areaHeight - Config.shipHeight,
     ),
   );
+  EndWall endWall = EndWall(
+    position: Vector2(0, Config.areaHeight),
+    wallSize: Vector2(Config.areaWidth, 1),
+  );
   List<EnemyShip> enemyShips = List<EnemyShip>.generate(10, (index) {
     return EnemyShip(
       enemySize: Vector2(50, 50),
@@ -28,6 +33,7 @@ class CosmicGame extends FlameGame with KeyboardEvents, HasCollisionDetection {
     super.onLoad();
     await add(playArea);
     await add(cosmicShip);
+    await add(endWall);
     await addAll(enemyShips);
 
     debugMode = true;

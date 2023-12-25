@@ -1,6 +1,3 @@
-import 'dart:ui';
-
-import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter_flame/components/cosmic_game.dart';
@@ -34,11 +31,15 @@ class CosmicShip extends SpriteAnimationComponent with HasGameReference<CosmicGa
     switch (direction) {
       case Direction.left:
         animation = _flyingLeft;
-        position.x--;
+        if (position.x > 0) {
+          position.x -= 2;
+        }
         break;
       case Direction.right:
         animation = _flyingRight;
-        position.x++;
+        if (position.x < Config.areaWidth - Config.shipWidth) {
+          position.x += 2;
+        }
         break;
       case Direction.none:
         animation = _defaultAnimation;
