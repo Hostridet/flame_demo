@@ -6,7 +6,10 @@ import 'package:flutter_flame/utils/directions.dart';
 
 /// Корабль
 class CosmicShip extends SpriteAnimationComponent with HasGameReference<CosmicGame> {
-  CosmicShip({required super.position}) : super();
+  CosmicShip({
+    required super.position,
+    required super.size,
+  }) : super();
   late final SpriteAnimation _flyingLeft;
   late final SpriteAnimation _flyingRight;
   late final SpriteAnimation _defaultAnimation;
@@ -18,7 +21,6 @@ class CosmicShip extends SpriteAnimationComponent with HasGameReference<CosmicGa
   Future<void> onLoad() async {
     super.onLoad();
     await _loadAnimations().then((_) => {animation = _defaultAnimation});
-    size = Vector2(Config.shipWidth, Config.shipHeight);
   }
 
   @override
