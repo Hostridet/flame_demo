@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flame/widgets/arrow_key.dart';
 import '../utils/directions.dart';
 
-/// Меню для взаимодействия с кораблем
+/// Меню для взаимодействия
 class NavigationKeys extends StatefulWidget {
   final ValueChanged<Direction>? onDirectionChanged;
 

@@ -1,17 +1,26 @@
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_flame/components/bullet_wall.dart';
 import 'package:flutter_flame/components/cosmic_ship.dart';
 import 'package:flutter_flame/components/end_wall.dart';
 import 'package:flutter_flame/components/enemy_ship.dart';
 import 'package:flutter_flame/components/play_area.dart';
+import 'package:flutter_flame/components/score_card.dart';
 import 'package:flutter_flame/components/ship_bullet.dart';
 import 'package:flutter_flame/config.dart';
 import 'package:flutter_flame/utils/directions.dart';
 import 'package:flutter_flame/utils/play_state.dart';
 
 class CosmicGame extends FlameGame with KeyboardEvents, HasCollisionDetection, TapDetector {
+  /// Состояние игры
   late PlayState playState;
+
+  /// Количество очков
+  final ValueNotifier<int> score = ValueNotifier(0);
+
+  /// Сложность игры
+  late double gameDifficulty;
 
   PlayArea playArea = PlayArea(
     size: Vector2(Config.areaWidth, Config.areaHeight),
@@ -35,34 +44,60 @@ class CosmicGame extends FlameGame with KeyboardEvents, HasCollisionDetection, T
     wallSize: Vector2(Config.areaWidth, 1),
   );
 
+  ScoreCard scoreCard = ScoreCard();
+
   void startGame() {
     if (playState == PlayState.playing) return;
 
-    world.removeAll(world.children.query<CosmicShip>());
-    world.removeAll(world.children.query<EnemyShip>());
-    world.removeAll(world.children.query<ShipBullet>());
+    overlays.clear();
+    gameDifficulty = 0.5;
 
-    playState = PlayState.playing;
-
+    addAll(generateEnemyList());
     add(cosmicShip);
-    List<EnemyShip> enemyShips = List<EnemyShip>.generate(10, (index) {
-      return EnemyShip(
-        enemySize: Vector2(50, 50),
-        position: Vector2(0 + index * 30, 0 + index * 30),
-        velocity: Vector2(0, 1),
-      );
-    });
-    addAll(enemyShips);
+    playState = PlayState.playing;
   }
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
+
     add(playArea);
     add(endWall);
     add(bulletWall);
+    add(scoreCard);
 
     playState = PlayState.welcome;
+    overlays.add(playState.name);
+  }
+
+  @override
+  Future<void> update(double dt) async {
+    super.update(dt);
+
+    if (children.query<EnemyShip>().isEmpty && playState == PlayState.playing) {
+      gameDifficulty += 0.1;
+      addAll(generateEnemyList());
+    }
+
+    if (playState == PlayState.end) {
+      removeAll(children.query<CosmicShip>());
+      removeAll(children.query<EnemyShip>());
+      removeAll(children.query<ShipBullet>());
+      overlays.add(playState.name);
+    }
+  }
+
+  List<EnemyShip> generateEnemyList() {
+    return List<EnemyShip>.generate(10, (index) {
+      return EnemyShip(
+        enemySize: Vector2(40, 40),
+        position: Vector2(0 + index * Config.areaWidth / 10, 0),
+        velocity: Vector2(0, gameDifficulty),
+        onRemoveShip: () {
+          score.value++;
+        },
+      );
+    });
   }
 
   void onArrowKeyChanged(Direction direction) {
@@ -83,7 +118,7 @@ class CosmicGame extends FlameGame with KeyboardEvents, HasCollisionDetection, T
     }
   }
 
-  @override // Add from here...
+  @override
   void onTap() {
     super.onTap();
     startGame();
